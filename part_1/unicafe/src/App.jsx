@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 const Button = (props) => {
   return(
     <button onClick={props.handleClick}>{props.text}</button>
@@ -13,6 +14,10 @@ const App = () => {
   const incrementGood = () => setGood (good + 1)
   const incrementNeutral = () => setNeutral (neutral + 1)
   const incrementBad = () => setBad (bad + 1)
+  const sum = good+neutral+bad
+  const positivProcent = (good/sum)*100
+  
+
   return (
     <>
     <h2>give feedback</h2>
@@ -24,6 +29,9 @@ const App = () => {
     <Display value={good} text='good'/>
     <Display value={neutral} text='neutral'/>
     <Display value={bad} text='bad'/>
+    <Display value={sum} text='all'/>
+    <Display value={sum===0 ? 0 : (good-bad)/sum} text='average'/>
+    <Display value={sum===0 ? 0 : positivProcent} text='positive'/>
     </>
   )
 }
