@@ -5,11 +5,16 @@ const Button = (props) => {
     <button onClick={props.handleClick}>{props.text}</button>
   )
 }
-const Display = (props) => <div>{props.text} {props.value}</div>
-
 const Statistics = (props) => {
+  if(props.sum===0){
+    return <p>No feedback given</p>
+  }
   return(
     <>
+      <div>good {props.good}</div>
+      <div>neutral {props.neutral}</div>
+      <div>bad {props.bad}</div>
+
       <div>all {props.sum}</div>
       <div>average {props.average}</div>
       <div>positive {props.positiv}</div>
@@ -37,11 +42,8 @@ const App = () => {
     <Button handleClick= {()=> incrementBad()} text='bad'/>
     
     <h2>statistics</h2>
-    <Display value={good} text='good'/>
-    <Display value={neutral} text='neutral'/>
-    <Display value={bad} text='bad'/>
-
-    <Statistics sum={sum} average={sum===0 ? 0:average} positiv={sum===0 ? 0:positivProcent}/>
+    <Statistics sum={sum} average={sum===0 ? 0:average} positiv={sum===0 ? 0:positivProcent}
+    good={good} neutral={neutral} bad={bad}/>
 
     </>
   )
