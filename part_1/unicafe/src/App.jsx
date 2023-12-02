@@ -5,19 +5,21 @@ const Button = (props) => {
     <button onClick={props.handleClick}>{props.text}</button>
   )
 }
+const StatisticLine = (props) => <div>{props.text} {props.value}</div> 
+
 const Statistics = (props) => {
   if(props.sum===0){
     return <p>No feedback given</p>
   }
   return(
     <>
-      <div>good {props.good}</div>
-      <div>neutral {props.neutral}</div>
-      <div>bad {props.bad}</div>
+      <StatisticLine text='good' value={props.good}/>
+      <StatisticLine text='neutral' value={props.neutral}/>
+      <StatisticLine text='bad' value={props.bad}/>
 
-      <div>all {props.sum}</div>
-      <div>average {props.average}</div>
-      <div>positive {props.positiv}</div>
+      <StatisticLine text='all' value={props.sum}/>
+      <StatisticLine text='average' value={props.average}/>
+      <StatisticLine text='positiv' value={props.positiv}/>
     </>   
   )
 } 
