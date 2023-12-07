@@ -3,19 +3,17 @@ import Content from "./Content"
 import Total from "./Total"
 
 const Course = ({course}) => {
-    const result = () => {
-        let sum = 0
-        for(let i=0;i<course.parts.length;i++){
-            sum = sum + course.parts[i].exercises
-        }
-        return sum
-    }
+    
+    const result = course.parts.reduce((accumulator,currentValue)=>{
+        accumulator = accumulator + currentValue.exercises
+        return accumulator
+    },0)
     
     return(
         <>
         <Header course={course.name}/>
         <Content course={course}/>
-        <Total sum={result()}/>
+        <Total sum={result}/>
         </>
     )
 }
