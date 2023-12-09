@@ -1,13 +1,13 @@
 import Part from "./Part"
 
-const Content = ({course}) => {
+const Content = (props) => {
     return (
-        <>
-        {course.parts.map(part=>
+        <ul>
+        {props.parts.map(part=>
         <Part name={part.name}
          exercises={part.exercises} 
          key={part.id}/>)}
-        </>
+        </ul>
     )
 }
 export default Content

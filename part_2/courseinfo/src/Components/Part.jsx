@@ -1,6 +1,6 @@
 const Part = (props) => {
       return(
-        <p>{props.name} {props.exercises}</p>
+        <li>{props.name} {props.exercises}</li>
       )
     }
 export default Part

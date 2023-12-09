@@ -46,15 +46,8 @@ const course = [
 ]
   return (
     <>
-      {course.map(el => 
-      <div key={el.id}>
-        <h2> {el.name} </h2>
-        <ul>{el.parts.map(a=><li key={a.id}>{a.name} {a.exercises}</li>)}</ul>
-        <p>Total of {el.parts.reduce((acc, currentValue)=>{
-          acc = acc + currentValue.exercises
-          return acc
-        },0)} exercises</p>
-      </div>)}    
+       {course.map(el =>
+       <Course key={el.id} name={el.name} parts={el.parts}/>)}  
     </>
   )
 }
