@@ -14,16 +14,22 @@ const App = () => {
 
   const addNewName = (event) => {
     event.preventDefault()
-    if(newName.length > 0){
-      const nameObject = {
-        name: newName,
-        id: persons.length + 1
-      }
-      setPersons(persons.concat(nameObject))
-      setNewName('')
+    if(newName.length>0){  
+    const nameObject = {
+              name: newName,
+              id: persons.length + 1
+            }                          
+      persons.map(function(person){
+        if(newName === person.name){  
+          alert(`${newName} is already added to phonebook`) 
+          return setNewName(''),setPersons(persons)    
+         }else{
+          return setNewName(''),setPersons(persons.concat(nameObject))
+         }
+        })             
     }  
-  }
-
+  }        
+     
   return (
     <div>
       <h2>Phonebook</h2>
