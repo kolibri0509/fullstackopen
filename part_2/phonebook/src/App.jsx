@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './Components/Filter'
+import PersonForm from './Components/PersonForm'
+import Persons from './Components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -41,10 +44,10 @@ const App = () => {
               id: persons.length + 1
             }                                     
     persons.map(function(person){
-      if(newName === person.name){  
+      if(person.name === newName){  
           alert(`${newName} is already added to phonebook`) 
           return setNewName(''),setNewNumber(''),setPersons(persons)    
-      }else if(newNumber === person.number){
+      }else if(person.number === newNumber){
           alert(`${newNumber} is already added to phonebook`)
           return setNewNumber(''),setNewName(''),setPersons(persons)
       }
@@ -55,27 +58,17 @@ const App = () => {
       })             
     } 
   }        
-  
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input onChange={findName} value={findNameValue}/>
-      </div>
-      <h2>Add a new</h2>
-      <form onSubmit={addNewName}>
-        <div>
-          name: <input onChange={writeName} value={newName}/> <br/> <br/>
-          number: <input onChange={writeNumber} value={newNumber}/>
-        </div> <br/>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>{showNames}</div>
+        <Filter find={findName} value={findNameValue}/>
+      <h3>Add a new</h3>
+        <PersonForm addNewName={addNewName} writeName={writeName} 
+        newName={newName} writeNumber={writeNumber} newNumber={newNumber}/>
+      <h3>Numbers</h3>
+      {/* <div>{showNames}</div> */}
+      <Persons showNames={showNames}/>
     </div>
   )
 }
-
 export default App
