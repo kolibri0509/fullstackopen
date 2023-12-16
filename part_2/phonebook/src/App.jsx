@@ -43,24 +43,12 @@ const App = () => {
     if(newName.length>0 && newNumber.length>0){  
         const nameObject = {
               name: newName,
-              number: newNumber,
-              id: persons.length + 1
+              number: newNumber
             }                                     
-    persons.map(function(person){
-      if(person.name === newName){  
-          alert(`${newName} is already added to phonebook`) 
-          return setNewName(''),setNewNumber(''),setPersons(persons)    
-      }else if(person.number === newNumber){
-          alert(`${newNumber} is already added to phonebook`)
-          return setNewNumber(''),setNewName(''),setPersons(persons)
-      }
-      else{
-        axios
-        .post("http://localhost:3002/persons", nameObject)
-        .then(response => setPersons(persons.concat(nameObject)))
-        setNewName(''),setNewNumber('')
-        }
-      })             
+    axios
+    .post("http://localhost:3002/persons", nameObject)
+    .then(response => setPersons(persons.concat(response.data)))
+    setNewName(''),setNewNumber('')
     } 
   }        
   return (
