@@ -2,17 +2,16 @@ import { useState, useEffect } from 'react'
 import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
 import Persons from './Components/Persons'
-import axios from 'axios'
+import phonebookService from './services/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
 
-  const hook = () => {
-    axios
-    .get("http://localhost:3002/persons")
-    .then(response => setPersons(response.data))
-  }
-  useEffect(hook, [])
+  useEffect(()=>{
+    phonebookService.getAll()
+    .then(initialPersons => setPersons(initialPersons))
+  },[])
 
   // name search
   const [findNameValue, setFindNameValue] = useState('')
@@ -45,9 +44,8 @@ const App = () => {
               name: newName,
               number: newNumber
             }                                     
-    axios
-    .post("http://localhost:3002/persons", nameObject)
-    .then(response => setPersons(persons.concat(response.data)))
+    phonebookService.create(nameObject)
+    .then(returnedPersons => setPersons(persons.concat(returnedPersons)))
     setNewName(''),setNewNumber('')
     } 
   }        
@@ -59,7 +57,6 @@ const App = () => {
         <PersonForm addNewName={addNewName} writeName={writeName} 
         newName={newName} writeNumber={writeNumber} newNumber={newNumber}/>
       <h3>Numbers</h3>
-      {/* <div>{showNames}</div> */}
       <Persons showNames={showNames}/>
     </div>
   )
