@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Filter from './Components/Filter'
 import PersonForm from './Components/PersonForm'
 import Persons from './Components/Persons'
+import Person from './Components/Person'
 import phonebookService from './services/persons'
 
 
@@ -13,17 +14,30 @@ const App = () => {
     .then(initialPersons => setPersons(initialPersons))
   },[])
 
+  // delete name and number
+  const deleteUser = (id) => {
+    phonebookService.deleteId(id)
+    .then(()=>setPersons(persons.filter(person => person.id !== id )))
+  }
+
   // name search
   const [findNameValue, setFindNameValue] = useState('')
 
   const findName = (event) => {
     setFindNameValue(event.target.value)  
   } 
-  const filterName= persons.filter(person=>person.name.toLowerCase().includes(findNameValue.toLowerCase()))
+  const filterName= persons.filter(person=>person.name
+    .toLowerCase().includes(findNameValue.toLowerCase()))
   
   const showNames = findNameValue 
-  ? filterName.map(person=><p key={person.id}>{person.name} {person.number}</p>)
-  : persons.map(person=><p key={person.id}>{person.name} {person.number}</p>)
+  ? filterName.map(person=> 
+    <Person id={person.id} name={person.name} number={person.number}
+     key={person.id}  deleteUser={deleteUser}/>
+  )
+  : persons.map(person=>
+    <Person id={person.id} name={person.name} number={person.number}
+     key={person.id}  deleteUser={deleteUser}/>
+  )
 
   // adding name and number
   const [newName, setNewName] = useState('')
@@ -47,8 +61,8 @@ const App = () => {
     phonebookService.create(nameObject)
     .then(returnedPersons => setPersons(persons.concat(returnedPersons)))
     setNewName(''),setNewNumber('')
-    } 
-  }        
+    }  
+  }    
   return (
     <div>
       <h2>Phonebook</h2>
@@ -57,7 +71,7 @@ const App = () => {
         <PersonForm addNewName={addNewName} writeName={writeName} 
         newName={newName} writeNumber={writeNumber} newNumber={newNumber}/>
       <h3>Numbers</h3>
-      <Persons showNames={showNames}/>
+        <Persons showNames={showNames}/>
     </div>
   )
 }
