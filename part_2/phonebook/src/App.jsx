@@ -50,17 +50,54 @@ const App = () => {
   const writeNumber = (event) => {
     setNewNumber(event.target.value)
   }
+  
+  const replaceNumber = (id) => {
+    const contact = persons.find(p => p.id === id)
+    if(window.confirm(`${contact.name} is already added to phonebook,
+    replace the old number with a new one?`)){
+      const changeContact = {...contact, number:newNumber}
+      phonebookService.update(id, changeContact)
+      .then(returnedPersons => 
+        setPersons(persons.map(p => p.id !== id? p : returnedPersons)))
+        setNewName(''),setNewNumber('')
+    }  
+  }
 
-  const addNewName = (event) => {
-    event.preventDefault()
-    if(newName.length>0 && newNumber.length>0){  
+  const replaceName = (id) => {
+    const contact = persons.find(p => p.id === id)
+    if(window.confirm(`${contact.number} is already added to phonebook,
+    replace the old name with a new one?`)){
+      const changeContact = {...contact, name:newName}
+      phonebookService.update(id, changeContact)
+      .then(returnedPersons => 
+        setPersons(persons.map(p => p.id !== id? p : returnedPersons)))
+        setNewName(''),setNewNumber('')
+    }  
+  }
+
+  const addNewName = (event) => {  
+    event.preventDefault() 
+    if(newName.length>0 && newNumber.length>0){
+      if(persons.find(person => person.name === newName)&&
+      persons.find(person => person.number === newNumber)){
+        alert('This contact is already in the phone book.')
+        setNewName(''),setNewNumber('')
+      }
+      else if(persons.find(person => person.name === newName)){
+        const replace = persons.filter(person => person.name === newName)
+        replaceNumber(replace[0].id)
+      }else if(persons.find(person => person.number === newNumber)){
+        const replace = persons.filter(person => person.number === newNumber)
+        replaceName(replace[0].id)
+      }else{
         const nameObject = {
-              name: newName,
-              number: newNumber
-            }                                     
-    phonebookService.create(nameObject)
-    .then(returnedPersons => setPersons(persons.concat(returnedPersons)))
-    setNewName(''),setNewNumber('')
+          name: newName,
+          number: newNumber
+        } 
+        phonebookService.create(nameObject)
+        .then(returnedPersons => setPersons(persons.concat(returnedPersons))),
+        setNewName(''),setNewNumber('')
+      }      
     }  
   }    
   return (
