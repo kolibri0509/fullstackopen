@@ -4,10 +4,12 @@ import PersonForm from './Components/PersonForm'
 import Persons from './Components/Persons'
 import Person from './Components/Person'
 import phonebookService from './services/persons'
+import Notification from './Components/Notification'
 
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
+  const [message, setMessage] = useState(null)
 
   useEffect(()=>{
     phonebookService.getAll()
@@ -86,9 +88,17 @@ const App = () => {
       else if(persons.find(person => person.name === newName)){
         const replace = persons.filter(person => person.name === newName)
         replaceNumber(replace[0].id)
+        setMessage('Number successfully changed')
+        setTimeout(()=>{
+          setMessage(null)
+        },5000)
       }else if(persons.find(person => person.number === newNumber)){
         const replace = persons.filter(person => person.number === newNumber)
         replaceName(replace[0].id)
+        setMessage('Name successfully changed')
+        setTimeout(()=>{
+          setMessage(null)
+        },5000)
       }else{
         const nameObject = {
           name: newName,
@@ -96,6 +106,10 @@ const App = () => {
         } 
         phonebookService.create(nameObject)
         .then(returnedPersons => setPersons(persons.concat(returnedPersons))),
+        setMessage(`Added ${newName}`)
+        setTimeout(()=>{
+          setMessage(null)
+        },5000)
         setNewName(''),setNewNumber('')
       }      
     }  
@@ -103,6 +117,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification message={message}/>
         <Filter find={findName} value={findNameValue}/>
       <h3>Add a new</h3>
         <PersonForm addNewName={addNewName} writeName={writeName} 
