@@ -31,24 +31,9 @@
       "id": 8
     },
     {
-      "name": "Alice",
-      "number": "888",
-      "id": 9
-    },
-    {
       "name": "Hugo Boss",
       "number": "700",
       "id": 10
-    },
-    {
-      "name": "Margaret",
-      "number": "987456123",
-      "id": 11
-    },
-    {
-      "name": "Mikhail Nikitin",
-      "number": "46-19-09",
-      "id": 12
     }
   ]
 }

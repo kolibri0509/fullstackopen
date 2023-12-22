@@ -5,11 +5,13 @@ import Persons from './Components/Persons'
 import Person from './Components/Person'
 import phonebookService from './services/persons'
 import Notification from './Components/Notification'
+import Error from './Components/Error'
 
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(()=>{
     phonebookService.getAll()
@@ -20,6 +22,13 @@ const App = () => {
   const deleteUser = (id) => {
     phonebookService.deleteId(id)
     .then(()=>setPersons(persons.filter(person => person.id !== id )))
+    .catch(error => {
+      setError('Information not available on server')
+      setTimeout(()=>{
+        setError(null)
+      },3000)
+      setPersons(persons.filter(person => person.id !== id ))
+    })
   }
 
   // name search
@@ -58,10 +67,22 @@ const App = () => {
     if(window.confirm(`${contact.name} is already added to phonebook,
     replace the old number with a new one?`)){
       const changeContact = {...contact, number:newNumber}
+
       phonebookService.update(id, changeContact)
-      .then(returnedPersons => 
-        setPersons(persons.map(p => p.id !== id? p : returnedPersons)))
-        setNewName(''),setNewNumber('')
+      .then(returnedPersons => {
+        setPersons(persons.map(p => p.id !== id? p : returnedPersons))
+        setMessage('Number successfully changed')
+        setTimeout(()=>{
+          setMessage(null)
+        },5000)
+      })
+      .catch(error => {
+        setError(`Information of ${contact.number} has already been removed from server`)
+        setTimeout(()=>{
+          setError(null)
+        },5000)
+        setPersons(persons.filter(person => person.id !== id ))
+      })  
     }  
   }
 
@@ -70,10 +91,23 @@ const App = () => {
     if(window.confirm(`${contact.number} is already added to phonebook,
     replace the old name with a new one?`)){
       const changeContact = {...contact, name:newName}
+
       phonebookService.update(id, changeContact)
-      .then(returnedPersons => 
-        setPersons(persons.map(p => p.id !== id? p : returnedPersons)))
-        setNewName(''),setNewNumber('')
+      .then(returnedPersons => {
+        setPersons(persons.map(p => p.id !== id? p : returnedPersons))
+        setMessage('Name successfully changed')
+        setTimeout(()=>{
+          setMessage(null)
+        },5000) 
+      }
+    )
+      .catch(error => {
+        setError(`Information of ${contact.name} has already been removed from server`)
+        setTimeout(()=>{
+          setError(null)
+        },5000)
+        setPersons(persons.filter(person => person.id !== id ))
+      })     
     }  
   }
 
@@ -88,17 +122,13 @@ const App = () => {
       else if(persons.find(person => person.name === newName)){
         const replace = persons.filter(person => person.name === newName)
         replaceNumber(replace[0].id)
-        setMessage('Number successfully changed')
-        setTimeout(()=>{
-          setMessage(null)
-        },5000)
+        setNewName(''),setNewNumber('')
+      
       }else if(persons.find(person => person.number === newNumber)){
         const replace = persons.filter(person => person.number === newNumber)
         replaceName(replace[0].id)
-        setMessage('Name successfully changed')
-        setTimeout(()=>{
-          setMessage(null)
-        },5000)
+        setNewName(''),setNewNumber('')
+        
       }else{
         const nameObject = {
           name: newName,
@@ -118,6 +148,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
         <Notification message={message}/>
+        <Error error={error}/>
         <Filter find={findName} value={findNameValue}/>
       <h3>Add a new</h3>
         <PersonForm addNewName={addNewName} writeName={writeName} 
