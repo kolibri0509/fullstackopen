@@ -10,7 +10,6 @@ const ShowCountry = ({country}) => {
           if (state.capital) return;
           const baseUrlItem = `https://studies.cs.helsinki.fi/restcountries/api/name/${country}`;
           axios.get(baseUrlItem)
-            // .then((res) => res.json())
             .then((response) => {
               response.data.languages = Object.values(response.data.languages).join(", ");
               setState(response.data);
@@ -39,7 +38,7 @@ const ShowCountry = ({country}) => {
               </div>
             );
           };
-          
+
 const App = () => {
   const [countries, setCountries] = useState([]) 
   const [findCountrieValue, setFindCountrieValue] = useState('')

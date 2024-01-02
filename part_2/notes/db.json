@@ -37,12 +37,12 @@
     },
     {
       "content": "hjkkl",
-      "important": true,
+      "important": false,
       "id": 8
     },
     {
       "content": "utrewq",
-      "important": true,
+      "important": false,
       "id": 9
     }
   ]
