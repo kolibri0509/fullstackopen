@@ -5,3 +5,11 @@ content-type: application/json
    "content":"Postman is good in testing backend",
    "important":true 
 }
+###
+POST http://localhost:3004/api/notes
+content-type: application/json
+
+{
+   "content":"Morgan",
+   "important":true 
+}
