@@ -1,3 +1,3 @@
-https://www.helsinki.fi/en/faculty-science/faculty/computer-science
+https://part3-notes-55ct.onrender.com/
 
-https://github.com/UniversityOfHelsinkiCS
+
