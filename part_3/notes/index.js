@@ -1,8 +1,9 @@
 const express = require('express');
-const {connectToDb, getDb} = require('./mongo');
 const app = express();
-
 const cors = require('cors');
+require('dotenv').config()
+
+const Note = require('./models/note')
 
 // Промежуточное программное обеспечение
 const requestLogger = (request, response, next) => {
@@ -22,51 +23,24 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(express.static('dist'));
 
-let notes = [
-    {
-      id: 1,
-      content: "HTML is easy",
-      important: true
-    },
-    {
-      id: 2,
-      content: "Browser can execute only JavaScript",
-      important: false
-    },
-    {
-      id: 3,
-      content: "GET and POST are the most important methods of HTTP protocol",
-      important: true
-    }
-  ]
+let notes = []
 
-app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
-  })
 app.get('/api/notes', (request, response) => {
+  Note.find({}).then(notes => {
     response.json(notes)
   })
+  })
 app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-  if (note) {
+  Note.findById(request.params.id).then(note => {
     response.json(note)
-  } else {
-    response.statusMessage = 'The requested note does not exist.'
-    response.status(404).end()
-  }
+  })
 })
 app.delete('/api/notes/:id', (request,response)=> {
   const id = Number(request.params.id)
   notes = notes.filter(note => note.id != id)
   response.status(204).end()
 })
-const generateID = () => {
-  const maxId = notes.length > 0 
-  ? Math.max(...notes.map(n => n.id)) // ... превращает массив чисел в отдельные числа
-  : 0
-  return maxId + 1
-}
+
 app.post('/api/notes', (request, response) => {
   const body = request.body
   if(!body.content){
@@ -74,29 +48,20 @@ app.post('/api/notes', (request, response) => {
       error: 'content missing'
     })
   }
-  const note = {
+  const note = new Note({
     content: body.content,
     important: Boolean(body.important) || false,
-    id: generateID()
-  }
-  console.log(note)
-  notes.concat(note)
-  response.json(note)
+  })
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
 })
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
-let db;
-
-connectToDb((err)=>{
-  if(!err){
-    app.listen(PORT,(err) =>{
-      err ? console.log(err):console.log(`Server running on port ${PORT}`)
-  })
-    db = getDb();
-  }else{
-    console.log(`DB connection error: ${err}`)
-  }
+const PORT = process.env.PORT 
+app.listen(PORT,(err) =>{
+  err ? console.log(err):console.log(`Server running on port ${PORT}`)
 })
+
 
