@@ -21,3 +21,11 @@ content-type: application/json
    "content":"MongoDB + mongoose",
    "important":true 
 }
+###
+POST http://localhost:3001/api/notes
+content-type: application/json
+
+{
+   "content":"Hello, World!",
+   "important":true 
+}
