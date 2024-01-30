@@ -143,7 +143,10 @@ const App = () => {
           },5000)
         })
         .catch(error => {
-          setMessage(`Path 'name' (${newName}) is shorter than the minimum allowed length (3)`)
+          setError(`Path 'name' (${newName}) is shorter than the minimum allowed length (3)`)
+          setTimeout(()=>{
+            setMessage(null)
+          },5000)
           console.log(error.response.data.error)
         })        
         setNewName(''),setNewNumber('')
