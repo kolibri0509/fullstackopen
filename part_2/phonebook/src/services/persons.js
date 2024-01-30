@@ -2,13 +2,8 @@ import axios from 'axios'
 const baseUrl = '/api/persons'
 
 const getAll = () => {
-    const nonExisting = {
-        id: 10000,
-        name: 'This NAME is not saved to server',
-        number: 890656342,
-      }
     return axios.get(baseUrl)
-    .then(response => response.data.concat(nonExisting))
+    .then(response => response.data)
 }
 
 const create = (nameObject) => {

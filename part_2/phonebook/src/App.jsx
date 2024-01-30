@@ -135,11 +135,17 @@ const App = () => {
           number: newNumber
         } 
         phonebookService.create(nameObject)
-        .then(returnedPersons => setPersons(persons.concat(returnedPersons))),
-        setMessage(`Added ${newName}`)
-        setTimeout(()=>{
-          setMessage(null)
-        },5000)
+        .then(returnedPersons => {
+          setPersons(persons.concat(returnedPersons))
+          setMessage(`Added ${newName}`)
+          setTimeout(()=>{
+            setMessage(null)
+          },5000)
+        })
+        .catch(error => {
+          setMessage(`Path 'name' (${newName}) is shorter than the minimum allowed length (3)`)
+          console.log(error.response.data.error)
+        })        
         setNewName(''),setNewNumber('')
       }      
     }  
