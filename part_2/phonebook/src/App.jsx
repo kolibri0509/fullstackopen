@@ -143,7 +143,13 @@ const App = () => {
           },5000)
         })
         .catch(error => {
-          setError(`Path 'name' (${newName}) is shorter than the minimum allowed length (3)`)
+          if(newName.length < 3){
+            setError(`Path 'name' (${newName}) is shorter than the minimum allowed length (3)`)
+          }else if(newNumber.length < 8){
+            setError(`Path 'number' (${newNumber}) is shorter than the minimum allowed length (8)`)
+          }else{
+            setError('Valid number format is XX-... or XXX-...')
+          }          
           setTimeout(()=>{
             setError(null)
           },5000)
