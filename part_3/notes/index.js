@@ -1,17 +1,17 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
+const express = require('express')
+const app = express()
+const cors = require('cors')
 require('dotenv').config()
 
 const Note = require('./models/note')
 
 // Промежуточное программное обеспечение
 const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method);
-  console.log('Path:', request.path);
-  console.log('Body:', request.body);
-  console.log('---');
-  next();
+  console.log('Method:', request.method)
+  console.log('Path:', request.path)
+  console.log('Body:', request.body)
+  console.log('---')
+  next()
 }
 // Промежуточное программное обеспечение для перехвата запросов к несуществующим маршрутам
 const unknownEndpoint = (request, response) => {
@@ -28,56 +28,56 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-app.use(express.static('dist'));
-app.use(express.json());
-app.use(requestLogger);
-app.use(cors());
+app.use(express.static('dist'))
+app.use(express.json())
+app.use(requestLogger)
+app.use(cors())
 
 app.get('/api/notes', (request, response) => {
   Note.find({}).then(notes => {
     response.json(notes)
   })
-  })
+})
 app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id).then(note => {
     if(note){
       response.json(note)
     }else{
       response.status(404).end()
-    }  
+    }
   })
-  .catch( error => next(error))
+    .catch( error => next(error))
 })
-app.delete('/api/notes/:id', (request,response)=> {
+app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-    .then(result=>
+    .then(() =>
       response.status(204).end())
-    .catch(error=> next(error)) 
+    .catch(error => next(error))
 })
 
 app.post('/api/notes', (request, response, next) => {
   const body = request.body
-  
+
   const note = new Note({
     content: body.content,
     important: body.important || false,
     date: new Date(),
   })
   note.save()
-  .then(savedNote => {
-    response.json(savedNote)
-  })
-  .catch(error => next(error))
+    .then(savedNote => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
   const { content, important } = request.body
-  
+
   Note.findByIdAndUpdate(
     request.params.id,
     { content, important },
     { new: true, runValidators: true, context: 'query' }
-    )
+  )
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -87,8 +87,8 @@ app.put('/api/notes/:id', (request, response, next) => {
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
-const PORT = process.env.PORT 
-app.listen(PORT,(err) =>{
+const PORT = process.env.PORT
+app.listen(PORT,(err) => {
   err ? console.log(err):console.log(`Server running on port ${PORT}`)
 })
 
